@@ -9,6 +9,8 @@ let dbs = require('./database');   // importing the dbs
 // path to view , set the view ending and body parser
 
 var path = require("path");
+const { error } = require("console");
+const { rmSync } = require("fs");
 
 
 app.use(express.urlencoded({extended:false}));
@@ -23,11 +25,37 @@ app.set('view engine' , 'ejs');
 
 app.get("/" , function(req,res){
     
-    
-    res.render("menu");
+    let msg = "";
 
+    if(req.query['msg'] != ""){
+        msg = req.query['msg'];
+    }
+
+
+
+    res.render("menu" , {msg:msg});
 
 });
+
+
+
+
+app.get("/listuser" , function(req,res){
+
+    let sql = "select * from user ";
+
+    dbs.query(sql , function(error , result,field){
+        if(error){
+            res.redirect("/");
+        }
+
+        else{
+            res.render("userlistview" , {data:result});
+        }
+    })
+    
+});
+
 
 
 
@@ -36,10 +64,6 @@ app.get("/adduser" , function(req,res){   // if got req      .../adduser  then s
     res.render('adduser');
 })
 
-
-app.get("/listuser" , function(req,res){ 
-    res.render('userlistview');
-})
 
 
 
@@ -92,13 +116,27 @@ app.post("/addusersubmit" , function(req,res){
         }
 
      });
+})
 
 
 
-    
+app.get('/edituser' , function(req,res){
+    let sql = "select * from user where id="+req.query['id'];
 
 
+    res.write(sql);
 
+    dbs.query(sql,function(err,result , field){
+        if(err){
+            res.redirect('/');
+        }
+
+        else{
+            console.log(result);
+        }
+    });
+
+    res.end();
 
 })
 
