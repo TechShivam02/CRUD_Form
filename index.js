@@ -34,7 +34,7 @@ app.get("/" , function(req,res){
 
 
 
-    res.render("menu" , {msg:msg});
+    res.render("menu" , {msg:msg});   // ""
 
 });
 
@@ -149,7 +149,7 @@ app.get('/edituser' , function(req,res){
 
 app.post("/editusersubmit", function(req,res){
 
-    let id = req.body.id;
+    var id = req.body.id;
 
     let name = req.body.name;   
     let email = req.body.Email; 
